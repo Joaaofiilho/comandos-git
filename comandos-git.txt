@@ -1,0 +1,266 @@
+Comandos Git
+
+Primeiramente saiba que:
+Diretório de trabalho -> Arquivos no seu computador que não levaram commit.
+Área de preparação -> Arquivos em commit, mas que não estão no seu repositório.
+Repositório -> Arquivos que estão no repositório.
+
+
+>COMANDOS BÁSICOS<
+
+
+Compara dois commits, imprimindo cada linha que está presente em um commit e não está em
+outro.
+
+	git diff vai fazer isso. Ele recebe dois argumentos - os dois IDs dos commits para
+	comparar. 
+
+
+Para comparar a área atual de trabalho com a área de preparação, ou seja, ver quais mudanças
+foram feitas no arquivo original sem ter dado algum commit, basta fazer o seguinte:
+
+	git diff. Ele não recebe argumentos.
+
+
+Para comparar a área de preparação com a versão do repositório usa-se:
+
+	git diff --staged
+
+
+Faz a cópia de um repositório Git inteiro, incluindo o histórico, para o seu próprio
+computador.
+
+	git clone vai fazer isso. Ele recebe um argumento - a URL do repositório para copiar. 
+
+
+
+Temporariamente reseta todos os arquivos em um repositório para o estado que estavam
+em um commit específico.
+
+	git checkout vai fazer isso. Ele recebe um argumento - o ID do commit para restaurar. 
+
+
+
+Mostra os commits feitos em um repositório, começando pelo mais recente.
+
+	git log vai fazer isso. Ele não recebe nenhum argumento.
+
+
+Para mostrar os commits feitos em um repositório de forma melhor, o que inclui um pequeno
+gráfico que mostra se as mudanças foram feitas no Branch principal ou em outro, usa-se:
+
+	git log --graph --oneline
+
+	Nota: O comando "--oneline" é para simplificar a exibição, não é obrigatório.
+
+Para copiar um diretório, você não precisava saber disso, mas é possível copiar um
+diretório de um computador para outro usando o comando "src", que é uma abreviatura
+de "secure copy" (Cópia segura, em português).
+	
+	git src
+
+
+Para criar um repositório Git em uma pasta que você tem basta usar o seguinte comando:
+
+	git init
+
+	Nota: Uma pasta chamada ".git" será criada de forma oculta, onde ficará armazenado todo
+	o histórico de versões de cada commit.
+
+
+Para adicionar arquivos de um Repositório Git para a área de preparação basta usar o comando:
+
+	git add arquivo-que-voce-quer-passar.algo
+
+	Nota: Pode colocar um " . " ao invés de "arquivo-que-voce-quer-passar.algo".
+
+
+Para dar um commit em arquivos de um repositório na área preparatória:
+	
+	"git commit" -> Vai abrir o editor de texto previamente configurado, no caso o Sublime.
+	"git commit -m "Sua mensagem aqui"" -> Faz o commit diretamente do GUI.
+
+
+Para desfazer TODAS as alterações feitas nos arquivos do Diretório de Trabalho e na Área de
+Preparação usa-se o comando:
+
+	git reset --hard
+
+	Nota: Ao executar esse comando, NÃO SE PODE VOLTAR ATRÁS.
+
+
+>BRANCH<
+
+
+Primeiro saiba que:
+A criação de um Branch é necessária quando você quer trabalhar em algo que você não sabe se
+entrará na versão final do seu projeto ou não. Como uma versão em outra lingua para ver se
+o layout se encaixa certinho ou até mesmo novas funcionalidades que você está tentando testar.
+Todas as modificações feitas em um Branch não necessariamente impactarão no branch principal,
+que é, por padrão, o "Master".
+
+
+Para criar um branch usa-se o comando:
+	
+	git branch nome-do-branch
+
+	Nota: O branch será um desvio, ou seja, ele sairá do Branch master e seguirá seu próprio
+	rumo a partir do commit que você está no momento (Ou seja, o commit que você fez checkout).
+
+
+Para ver os commits existentes usa-se:
+
+	git branch. Nenhum argumento é necessário, o Git Bash irá listar todos os branchs existentes
+	em um só local.
+
+
+Para mudar de um Branch para outro usa-se o comando:
+
+	git checkout nome-do-branch
+
+	Nota: Qualquer novo commit ele irá para a linha do tempo do Branch atual.
+
+
+>MERGE<
+
+
+Para comparar dois commits, um commit com o seu pai, use o comando:
+
+	git show o-id-do-seu-commit-aqui
+
+	Nota: Isso é necessário quando se faz Merge em dois Branchs, já que a ordem dos commits ficarão
+	por ordem de horários e não por pai e filho.
+
+
+Para fazer Merge em dois branchs usa-se
+
+	git merge branch-1 branch-2
+
+	Nota: Isso juntará os commits do branch-1 com os do branch-2, os commits vão ser ordenados por
+	horário. O Branch final vai ser o branch que está checado com o "checkout".
+
+Caso ao fazer um Merge dê erro de Conflito, deve-se fazer o seguinte:
+	O Github irá mostrar e marcar nos códigos onde os erros aconteceram, os sinais são
+	">>>>> HEAD", "|||||||", "=======" e ">>>>>>>> master". O que tem de se fazer é analizar os
+	códigos e fazer as mudanças necessárias para que não haja mais erro de conflito.
+	Depois que as mudanças estiverem terminadas, analize o conteúdo com "git status" e os arquivos
+	que foram arrumados serão marcados com "both modified", onde "both" significa que os arquivos
+	foram modificados nos dois Branchs que estão fazendo Merge. Para salvar as mudanças é só usar
+	o comando "Git add nome-do-arquivo.algo" e ao executar "git status" novamente, ele falará se
+	as mudanças resolveram o conflito ao não. A partir desse feedback, basta executar "git commit"
+	caso tudo tenha dado certo ou então continuar modificando até que tudo esteja OK.
+
+	Nota: Todas as mudanças realizadas quando um Merge dá errado são mudanças que modificarão os
+	dois Branchs. O Git Bash sinalizará isso com a mensagem "MERGING" ao lado da entrada de códigos.
+	Muito cuidado nesse momento, apenas modifique o necessário para se resolver o conflito do Merge.
+
+    Nota:
+    >>>>>>>>HEAD
+        Aqui ficam suas alterações.
+    ||||||| merged common ancestors
+        Aqui fica como o arquivo estava originalmente.
+    ========
+        Aqui ficam as alterações de outra pessoa.
+>REMOTE< >PUSH< >PULL<
+
+Primeiro saiba que:
+O Remote é o local nas nuvens de onde está armazenado meu código, ou seja, o lugar de Origem. Por
+conta disso, o nome de Remote mais comum é "origin".
+
+Para adicionar um Remote ao seu repositório local, você deve executar o comando:
+
+	git remote add nome-do-remote url-pro-remote
+
+	Nota: A url deve ser a url do seu repositório no Github.
+
+
+Para ver todos os remotes presentes no repositório local, basta executar o comando:
+
+	git remote. Esse comando não recebe argumentos.
+
+	Nota: Para ver com mais detalhes as informações (Com a URL que cada remote está relacionado)
+	basta executar "git remote -v" ao invés de apenas "git remote".
+
+
+Para enviar as alterações feitas localmente para o repositório no Github, executa-se o comando:
+
+	git push nome-do-remote branch-para-dar-o-push.
+
+	Nota: O nome-do-remote vai ser o local de origem do meu código, ou seja, local do link no Github
+	(Por padrão esse link tem o nome de "origin") e o branch seria o Branch local o qual desejo dar
+	push, por exemplo o Branch master.
+
+
+Para baixar os arquivos que estão no Github para meu repositório local (ou atualizá-los com os mais
+recentes commits), basta executar:
+
+	git pull nome-do-remote nome-do-branch-do-repositorio-do-github
+
+	Nota: O nome do remote seria o nome que eu teria dado ao repositório no Github, que geralmente é
+	"origin" e o nome-do-branch seria, na maioria das vezes, o mesmo nome do branch local, por exemplo
+	o Branch master.
+
+
+Nota geral: "Remote" seria meu repositório no Github.
+
+
+>FORK<
+
+Primeiro saiba que:
+Fork funciona como a função "git clone", mas ao invés de extrair um repositório do Github para a sua
+máquina, o "fork" extrai um repositório do Github de alguém para outro repositório também do Github,
+para outro usuário. Isso dá os créditos ao criador original do repositório que você está usando "Fork".
+Usa-se esse comando geralmente quando quero modificar algo no projeto de alguém para uso pessoal e
+quero ficar salvando as mudanças por conta própria, já que eu não teria esse direito no repositório
+dessa pessoa.
+
+
+>FETCH<
+
+Primeiro saiba que:
+Quando se faz um "git clone" ou "git pull", o git traz consigo todo o repositório, até o commit mais
+atual. O commit mais atual sincronizado com o Github no comento do "git clone" ou "git pull" chama-se
+"origin/master". Então todas as suas alterações locais ficarão no Branch master (que é diferente do
+"origin/master") e todas as alterações feitas no próprio Github ficarão no Branch master do Github,
+que também é diferente do "origin/master" do Github. Tome nota de que "origin/master" representa o
+ponto (commit) em que tanto o Github quanto o repositório local estão sincronizados.
+
+
+Caso você tenha um commit no Github e também outro commit diferente localmente e você quer que os dois
+commits sejam incorporados ao seu projeto, você executa o seguinte comando:
+
+	git fetch nome-do-remote
+
+	Nota: Isso vai criar uma "quebra", como se fosse um novo Branch no ponto do "origin/master". Esse
+	comando é como se fosse um "git pull", pois ele vai atualizar o ponto "origin/master" para o último
+	commit extraido do comando "git fetch" que vem do seu "origin" (remote) do Github. Então seu
+	repositório local vai ficar parecido com isso:
+
+		  --*--*(novo origin/master)
+	--*--*--*--*--* (master)
+		 (antigo origin/master)
+
+	Depois disso, para incorporar seus commits locais com os que foram puxados (pull, ou melhor, fetch)
+	do Github, basta executar "git merge origin/master master", o que vai unir os dois commits em um só
+	e todas as mudanças vão ser incluídas.
+
+
+>NOTAS GERAIS<
+
+Nota geral: Um commit pode ficar totalmente inacessível, tendo em vista a ideia da Acessibilidade*
+(Cada commit tem um pai). Por exemplo: Se você der checkout em um commit, fazer alterações nele e
+criar um novo commit a partir daquele ponto, você está criando um commit para fora da linha do
+Branch Master. Ao usar o "git log". esse commit não poderá ser visto, pois o pai dele seria um dos
+commits do Branch Master (Ou qualquer outro Branch que tenha sido usado).
+
+*Acessibilidade: Todo commit tem seu pai, com exceção do commit inicial, que é o primeiro. Então
+quando se usa o comando "git log", o que o Git Bash vai fazer é pegar o commit mais recente, ver
+qual o seu pai e mostrá-lo logo em seguida, assim sucessivamente até chegar em um que não tenha
+pai, que normalmente é o primeiro commit. Então se você criar um commit dentro de um checkout de
+um commit anterior (esse commit teria sido criado de forma desviada da linha do Branch Master),
+esse commit seria perdido, pois seu pai não aponta para ele, mas sim para o commit logo anterior
+à ele, que seria o próximo da fila do Branch Master.
+
+	. _ . _ . _ . _ . _ . (master)
+          	_ . (Esse commit seria o criado fora da linha do Branch Master, que vai ser
+          		ignorado ;-;)
